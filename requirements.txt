@@ -13,3 +13,8 @@ packaging>=23.0
 
 # Optional: Global hotkey support (requires admin on Windows)
 keyboard>=0.13.5
+
+# Auto-pause system
+pywin32>=305
+psutil>=5.9.0
+pynput>=1.7.6

@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### In Development
+- 🚧 **Auto-Pause System** (v1.1.0)
+  - Pause macro when typing in game
+  - Pause when Roblox window loses focus
+  - Auto-resume after configurable delay
+  - Toggle on/off in settings
+
 ---
 
 ## [1.0.0] - 2025-10-28
@@ -59,11 +66,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Future Plans
 
 ### [1.1.0] - Planned
-- [ ] Multi-game support (different fishing games)
-- [ ] Statistics tracking (catches per hour, etc.)
-- [ ] Profile system (multiple configurations)
-- [ ] Notification system (Discord webhooks?)
-- [ ] Advanced detection (machine learning?)
+- [ ] Statistics tracking (total catches, catches per hour, session time)
+- [ ] Profile system (save multiple presets dengan nama)
+- [ ] **Auto-Pause System** (pause when typing, window loses focus, player interaction)
+- [ ] Discord webhook notifications (catches milestone, errors, session summary)
+- [ ] Sound/visual alerts (when stopped, rare catch, etc.)
+- [ ] Failsafe system (max runtime, emergency stop, random delays)
+- [ ] Session scheduler (auto start/stop pada waktu tertentu)
 
 ### [1.2.0] - Ideas
 - [ ] Plugin system for extensibility
