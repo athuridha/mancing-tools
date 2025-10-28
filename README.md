@@ -1,224 +1,199 @@
-# Macro Mancing Indovoice
+<img src="assets/logo.png" width="150" align="right"/>
 
-<div align="center">
+### 🎣 Mancing Tools
 
-![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)
-![Python](https://img.shields.io/badge/python-3.8+-green.svg)
-![License](https://img.shields.io/badge/license-MIT-orange.svg)
+A highly configurable automation tool for Roblox fishing games using advanced color detection to achieve precision during the fishing minigame.
 
-**Professional Roblox Fishing Macro with Auto-Update**
+* Forever free and fully open-source
+* Feature-rich with automation and auto-update system
+* Modern GUI with real-time debug window
 
-[Features](#features) • [Installation](#installation) • [Usage](#usage) • [Build](#build)
+made with ❤️ by lamont
 
-</div>
+[![latest-release-shield](https://img.shields.io/github/v/release/athuridha/mancing-tools?logo=github&logoColor=white&labelColor=black&color=3c20ab)](https://github.com/athuridha/mancing-tools/releases/latest)
+[![download-shield](https://img.shields.io/github/downloads/athuridha/mancing-tools/total?label=downloads&labelColor=black&color=40ca53&logo=data:image/svg%2bxml;base64,PHN2ZwogICB2aWV3Qm94PSIwIDAgMjQgMjQiCiAgIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHBhdGgKICAgICBmaWxsPSIjZmZmIgogICAgIGQ9Ik0gMTIsMC4yMDk2MTUxNSBBIDExLjc5MDM4NSwxMS43OTAzODUgMCAxIDAgMjMuNzkwMzg1LDEyIDExLjc5MDM4NSwxMS43OTAzODUgMCAwIDAgMTIsMC4yMDk2MTUxNSBaIE0gOS4zMDAwMDE5LDkuOTgzODQ0MiAxMC44MjA5NjIsMTEuNTE2NTk0IFYgNC45MjU3NjkxIGggMi4zNTgwNzYgViAxMS41MTY1OTQgTCAxNC42OTk5OTgsOS45OTU2MzQ2IDE2LjM2MjQ0MiwxMS42NTgwNzkgMTIsMTYuMDIwNTIxIDcuNjI1NzY3MiwxMS42NTgwNzkgWiBNIDE2LjcxNjE1NCwxOS4wNzQyMzEgSCA3LjI4Mzg0NjEgdiAtMi4zNTgwNzcgaCA5LjQzMjMwNzkgeiIKICAgICAvPgo8L3N2Zz4K)](https://github.com/athuridha/mancing-tools/releases/latest)
+![Python](https://img.shields.io/badge/python-3.8+-green.svg?labelColor=black)
+![License](https://img.shields.io/badge/license-MIT-orange.svg?labelColor=black)
 
----
+## ⭐ Features
 
-## 🎣 Features
+Mancing Tools was developed with a primary focus on achieving accuracy during fishing minigames. It has since expanded to include several powerful features:
 
-### Core Features
-- **Automatic Fishing**: Detects green bar and auto-clicks
-- **Auto Recast**: Automatically recasts fishing rod when mini-game ends
-- **ROI Calibration**: Multiple ways to set detection area
-  - Cursor-based positioning
-  - Drag-to-select on screen
-  - Manual width/height adjustment
-- **Debug Mode**: Visual feedback for color detection
+* **Advanced Color Detection**: HSV-based green bar detection with customizable thresholds for precise timing.
+* **Auto-Update System**: Automatically checks for updates and provides one-click installation from GitHub releases.
+* **Modern UI**: Sleek dark-themed interface with scrollable pages and responsive layouts.
+* **Press-to-Bind Keybinds**: Intuitive hotkey setup by simply pressing the desired key.
+* **ROI Calibration Tools**: Multiple methods including drag-select with auto-minimize for clear screen view.
+* **Real-time Debug Window**: OpenCV-powered visual overlay showing detection zones and color ratios.
+* **Preset System**: Save and load configurations with JSON-based settings management.
+* **Auto Recast**: Intelligent automatic rod casting after minigame completion.
 
-### Advanced Features
-- **Custom Settings**: Fine-tune all detection thresholds
-- **Preset System**: Save and load your configurations
-- **Global Hotkeys**: Start/stop from anywhere (F1 default)
-- **Live Preview**: Real-time ROI preview and color ratios
-- **Professional GUI**: Modern dark-themed interface
+and much more!
 
-### Auto-Update System
-- **Automatic Update Check**: Checks for updates on startup
-- **One-Click Update**: Download and install updates easily
-- **Version Management**: Always stay on the latest version
+## 📷 Showcase
 
----
+![Showcase Example 1](assets/showcase_1.png)
+![Showcase Example 2](assets/showcase_2.png)
 
 ## 📦 Installation
 
-### Option 1: Use Pre-built Executable (Recommended)
-1. Download the latest `.exe` from [Releases](https://github.com/xinnercy/mancing-indovoice/releases)
-2. Run `mancing_indovoice.exe`
-3. That's it! No installation needed.
+## 📦 Installation
 
-### Option 2: Run from Source
+### 1. Quick Start (Recommended)
+Download the compiled executable (.exe) from the [releases page](https://github.com/athuridha/mancing-tools/releases/latest) - no Python installation required.
+
+> [!WARNING]
+> Some antivirus programs may flag the compiled executable as malicious. These are FALSE POSITIVES. You have every right to be suspicious, and you can perform a thorough analysis of both the code and the executable provided.
+
+### 2. Run from Source
 ```bash
-# Clone repository
-git clone https://github.com/xinnercy/mancing-indovoice.git
-cd mancing-indovoice
-
-# Install dependencies
+git clone https://github.com/athuridha/mancing-tools
+cd mancing-tools
 pip install -r requirements.txt
-
-# Run application
 python main.py
 ```
 
----
+Compile yourself: `python build.py`
 
-## 🚀 Usage
+> [!NOTE]
+> Option 1 is recommended for most users as it requires no technical setup. Choose Option 2 if you want to modify the source or prefer running from source.
 
-### Quick Start
-1. Launch the application
+## 📖 Quick Start
+
+### Setup
+1. Launch `mancing.exe`
 2. Position your Roblox fishing game window
 3. Click **"Drag-select ROI"** and select the fishing bar area
-4. Press **F1** or click **"Start"** to begin
+4. Press **F6** or click **"Start"** to begin fishing
 
-### Configuration
-Navigate to **Custom Settings** to adjust:
-- **Green/Red Thresholds**: Detection sensitivity
-- **Click Intervals**: Response speed
-- **Hold Duration**: Initial cast time
-- **Auto Recast Settings**: Timing for automatic recasting
+### Default Keybinds
+- **F6**: Start/Stop macro
+- **F7**: Hold cast (manual fishing)
+- **F8**: Exit application
 
-### Keybinds
-- Default: **F1** (Start/Stop)
-- Customize in **Keybinds** tab
-- Supports F1-F12 and single letters/numbers
+All keybinds can be customized in the **Keybinds** tab with press-to-bind system.
 
-### ROI Calibration
-1. **Kursor → ROI**: Center ROI at current mouse position
-2. **Drag-select ROI**: Click and drag to select area
-3. **Manual W/H**: Enter specific dimensions
+## ⚙️ Configuration
 
----
+### Custom Settings
+Navigate to **Settings** tab to adjust:
+- **Green/Red Thresholds**: Detection sensitivity for color matching
+- **Click Intervals**: Response speed and timing
+- **Hold Duration**: Initial cast timing
+- **Auto Recast**: Enable/disable and configure automatic recasting
+- **Delays**: Fine-tune timing between actions
 
-## 🏗️ Build from Source
+### Preset System
+- **Save Preset**: Export current settings to JSON file
+- **Load Preset**: Import previously saved configurations
+- Presets are saved in `config/presets/` folder
 
-### Build Executable
-```bash
-# Install PyInstaller
-pip install pyinstaller
+### ROI Calibration Methods
+1. **Drag-select ROI**: Click and drag to select area (app auto-minimizes for clear view)
+2. **Kursor → ROI**: Center ROI at current mouse position
+3. **Manual W/H**: Enter specific dimensions in settings
 
-# Build
-python build.py
-```
+## 🔄 Auto-Update System
 
-The executable will be in `dist/mancing_indovoice.exe`
+Mancing Tools automatically checks for updates:
+- **On Startup**: Silent check in background (doesn't interrupt)
+- **Manual Check**: Click "🔄 Cek Update" in Credit tab
+- **Update Notifications**: Popup when new version available with changelog
+- **One-Click Install**: Download and apply updates automatically
 
-### Build Options
-Edit `build.py` to customize:
-- Icon file
-- Console mode (show/hide)
-- Additional data files
-- Compression options
+### For Developers: Creating Releases
+1. Update version in `src/version.py`
+2. Update `CHANGELOG.md` with new features
+3. Build executable: `python build.py`
+4. Create GitHub release with tag (e.g., `v1.0.0`)
+5. Upload `dist/mancing.exe` as release asset
+6. Users will be notified automatically!
 
----
+## 📁 Project Structure
 
 ## 📁 Project Structure
 
 ```
-mancing-indovoice/
+mancing-tools/
 ├── src/
 │   ├── core/              # Core engine and vision
 │   │   ├── engine.py      # Fishing automation logic
 │   │   └── vision.py      # Color detection & screen capture
 │   ├── gui/               # User interface
 │   │   ├── main_window.py # Main application window
-│   │   └── pages.py       # UI pages (Home, Settings, etc.)
+│   │   └── pages.py       # UI pages (Home, Settings, Keybinds, Credit)
 │   ├── utils/             # Utilities
 │   │   ├── config.py      # Configuration management
 │   │   ├── updater.py     # Auto-update system
 │   │   └── screen.py      # Screen utilities
 │   └── version.py         # Version information
-├── config/                # Configuration files
-│   └── settings.json      # User settings (auto-generated)
+├── assets/                # Icons and images
+│   ├── logo.ico           # Application icon
+│   └── logo.png           # Logo image
+├── config/                # Configuration files (auto-generated)
+│   ├── settings.json      # User settings
+│   └── presets/           # Saved presets
+├── docs/                  # Documentation
+│   ├── USER_GUIDE.md      # Complete user guide
+│   ├── PROJECT_STRUCTURE.md
+│   └── ...
 ├── main.py               # Entry point
-├── build.py              # Build script
+├── build.py              # Build script for executable
 ├── requirements.txt      # Python dependencies
+├── CHANGELOG.md          # Version history
 └── README.md            # This file
 ```
-
----
-
-## ⚙️ Configuration File
-
-Settings are saved to `config/settings.json`:
-
-```json
-{
-  "roi": {"x": 697, "y": 892, "w": 526, "h": 70},
-  "green_th": 0.14,
-  "red_th": 0.10,
-  "click_i": 0.035,
-  "idle_i": 0.010,
-  "hold_s": 3.0,
-  "down_s": 0.01,
-  "inactive_to": 1.2,
-  "recast_delay": 0.30,
-  "auto_recast": true,
-  "key": "F1"
-}
-```
-
----
-
-## 🔄 Auto-Update System
-
-The application automatically checks for updates:
-- **On Startup**: Silent check in background
-- **Manual Check**: Click "Cek Update" in Credit tab
-- **Notifications**: Popup when new version available
-- **One-Click Install**: Download and restart automatically
-
-### For Developers: Creating Releases
-1. Update version in `src/version.py`
-2. Build executable: `python build.py`
-3. Create GitHub release with tag (e.g., `v2.0.0`)
-4. Upload `.exe` as release asset
-5. Users will be notified automatically!
-
----
 
 ## 🐛 Troubleshooting
 
 ### Hotkey Not Working
 - Try running as Administrator for global hotkeys
-- Use local hotkeys (requires app focus) as fallback
-- Check no other app is using the same key
+- Make sure no other application is using the same key
+- Check antivirus isn't blocking keyboard hooks
 
 ### Detection Not Accurate
 - Recalibrate ROI to match fishing bar exactly
-- Adjust green/red thresholds in settings
-- Use Debug mode to see detection overlay
+- Adjust green/red thresholds in **Settings** tab
+- Enable **Debug** mode to see detection overlay in real-time
+- Try different lighting settings in-game
 
 ### Application Won't Start
-- Install Visual C++ Redistributable
-- Check antivirus isn't blocking
-- Run from command line to see errors
+- Install [Visual C++ Redistributable](https://aka.ms/vs/17/release/vc_redist.x64.exe)
+- Check antivirus isn't blocking the executable
+- Try running from source if executable fails
 
----
+### Update Check Fails
+- Check internet connection
+- Repository must be public on GitHub
+- Verify `GITHUB_REPO` variable in code matches your repository
 
-## 📝 Credits
+## 💭 Footnotes
 
-**Developer**: lamont (@xinnercy)
-- Roblox: [xinnercy](https://www.roblox.com/users/8179160997/)
-- Discord: halflucifer
-
-**Support the Project**:
+Contributions are welcome! Feel free to:
 - ⭐ Star this repository
-- 🐛 Report bugs via Issues
-- 💡 Suggest features
-- ☕ Donate (if you want hehe)
+- 🐛 Report bugs via [Issues](https://github.com/athuridha/mancing-tools/issues)
+- 💡 Suggest new features
+- 🔧 Submit pull requests
 
----
+For questions or community support, join the Discord or create an issue on GitHub.
 
 ## 📜 License
 
-MIT License - feel free to use and modify!
+This project is licensed under [MIT License](LICENSE) - feel free to use and modify!
 
----
+## � Credits
 
-## 🔗 Links
+**Developer**: lamont ([@xinnercy](https://github.com/xinnercy))
+- Roblox: [xinnercy](https://www.roblox.com/users/8179160997/)
+- Discord: halflucifer
 
-- **GitHub**: https://github.com/xinnercy/mancing-indovoice
-- **Discord**: https://discord.gg/SWzSjeF3
-- **Issues**: https://github.com/xinnercy/mancing-indovoice/issues
+**Technologies Used**:
+- Python 3.8+
+- CustomTkinter (Modern GUI)
+- OpenCV (Computer Vision)
+- MSS (Screen Capture)
+- PyAutoGUI (Automation)
+- Requests (Auto-Update)
 
 ---
 
@@ -227,5 +202,7 @@ MIT License - feel free to use and modify!
 Made with ❤️ for the Roblox fishing community
 
 **Happy Fishing! 🎣**
+
+[⬆ Back to Top](#-mancing-tools)
 
 </div>
