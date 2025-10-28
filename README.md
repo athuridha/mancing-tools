@@ -59,14 +59,12 @@ Compile yourself: `python build.py`
 1. Launch `mancing.exe`
 2. Position your Roblox fishing game window
 3. Click **"Drag-select ROI"** and select the fishing bar area
-4. Press **F6** or click **"Start"** to begin fishing
+4. Press **F1** or click **"Start"** to begin fishing
 
-### Default Keybinds
-- **F6**: Start/Stop macro
-- **F7**: Hold cast (manual fishing)
-- **F8**: Exit application
+### Default Keybind
+- **F1**: Start/Stop macro
 
-All keybinds can be customized in the **Keybinds** tab with press-to-bind system.
+Keybind can be customized in the **Keybinds** tab with press-to-bind system.
 
 ## ⚙️ Configuration
 
