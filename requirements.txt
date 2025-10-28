@@ -1,0 +1,15 @@
+# Macro Mancing Indovoice Requirements
+# Core dependencies
+customtkinter>=5.2.0
+pyautogui>=0.9.54
+mss>=9.0.1
+opencv-python>=4.8.0
+numpy>=1.24.0
+Pillow>=10.0.0
+
+# Auto-update system
+requests>=2.31.0
+packaging>=23.0
+
+# Optional: Global hotkey support (requires admin on Windows)
+keyboard>=0.13.5
