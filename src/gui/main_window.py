@@ -53,8 +53,16 @@ class App(ctk.CTk):
     def __init__(self):
         super().__init__()
         self.title("Macro Mancing Indovoice")
-        self.geometry("1000x640")
-        self.minsize(960, 600)
+        self.geometry("900x600")
+        self.minsize(850, 550)
+        
+        # Center window on screen
+        self.update_idletasks()
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+        x = (screen_width - 900) // 2
+        y = (screen_height - 600) // 2
+        self.geometry(f"900x600+{x}+{y}")
         
         # Configuration
         self.config_manager = ConfigManager("config/settings.json")
@@ -70,6 +78,7 @@ class App(ctk.CTk):
         self.worker = None
         self._preview_img = None
         self._tk_bound_pattern = None
+        self._roi_tk_pattern = None
         
         # Engine
         self.engine = FishingEngine(self.config)
@@ -120,10 +129,14 @@ class App(ctk.CTk):
         
         # Keybind
         self.var_key = tk.StringVar(value=self.config.get("key", "F1"))
+        self.var_roi_key = tk.StringVar(value=self.config.get("roi_key", "F2"))
         
         # Build UI
         self._build_ui()
         self._bind_hotkey(self.var_key.get())
+        
+        # Bind F2 for drag-select ROI (or custom key)
+        self._bind_roi_hotkey(self.var_roi_key.get())
         
         # Start UI update loop
         self._tick_ui()
@@ -151,22 +164,38 @@ class App(ctk.CTk):
         
     def _build_topbar(self):
         """Build top navigation bar."""
-        top = ctk.CTkFrame(self, corner_radius=0)
+        top = ctk.CTkFrame(self, corner_radius=0, height=70)
         top.pack(side="top", fill="x")
+        top.pack_propagate(False)
         
-        title = ctk.CTkLabel(top, text="🎣 Macro Mancing Indovoice",
-                            font=ctk.CTkFont(size=18, weight="bold"))
-        title.pack(side="left", padx=14, pady=10)
+        # Left: Logo & Title
+        left_frame = ctk.CTkFrame(top, fg_color="transparent")
+        left_frame.pack(side="left", padx=20, pady=15)
         
-        # Menu buttons
+        title = ctk.CTkLabel(left_frame, text="🎣 Macro Mancing Indovoice",
+                            font=ctk.CTkFont(size=20, weight="bold"))
+        title.pack(side="left")
+        
+        # Version badge
+        from ..version import __version__
+        version_badge = ctk.CTkLabel(left_frame, text=f"v{__version__}",
+                                    font=ctk.CTkFont(size=10),
+                                    fg_color=("#3B8ED0", "#1F6AA5"),
+                                    corner_radius=6,
+                                    padx=8, pady=2)
+        version_badge.pack(side="left", padx=(10,0))
+        
+        # Right: Menu buttons
         self.menu_var = tk.StringVar(value="Home")
         menu = ctk.CTkSegmentedButton(
             top, 
-            values=["Home", "Custom Settings", "Keybinds", "Credit"],
+            values=["Home", "Settings", "Keybinds", "Credit"],
             variable=self.menu_var, 
-            command=self._on_menu_change
+            command=self._on_menu_change,
+            height=36,
+            font=ctk.CTkFont(size=13)
         )
-        menu.pack(side="right", padx=12, pady=10)
+        menu.pack(side="right", padx=20, pady=15)
         
     def _on_menu_change(self, value):
         """Handle menu selection change."""
@@ -176,7 +205,7 @@ class App(ctk.CTk):
         """Show specific page and hide others."""
         pages = {
             "Home": self.page_home,
-            "Custom Settings": self.page_settings,
+            "Settings": self.page_settings,
             "Keybinds": self.page_keybind,
             "Credit": self.page_credit,
         }
@@ -265,16 +294,6 @@ class App(ctk.CTk):
             int(self.var_w.get()), 
             int(self.var_h.get())
         )
-        
-    def calibrate_from_cursor(self):
-        """Set ROI center to current cursor position."""
-        import pyautogui as pag
-        x, y = pag.position()
-        w = int(self.var_w.get())
-        h = int(self.var_h.get())
-        self.roi = clamp_roi(x - w // 2, y - h // 2, w, h)
-        messagebox.showinfo("Kalibrasi", 
-                           f"ROI: x={self.roi.x}, y={self.roi.y}, w={self.roi.w}, h={self.roi.h}")
         
     def calibrate_by_selection(self):
         """Select ROI by dragging on screen."""
@@ -366,6 +385,12 @@ class App(ctk.CTk):
     def _debug_window(self):
         """Show debug window with ROI overlay."""
         from ..core.vision import calc_color_ratios
+        
+        # Create window and set it to stay on top
+        window_name = "ROI Debug (ESC to close)"
+        cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
+        cv2.setWindowProperty(window_name, cv2.WND_PROP_TOPMOST, 1)
+        
         while self.debug_open:
             try:
                 frame = grab_bgr(self.roi)
@@ -380,7 +405,7 @@ class App(ctk.CTk):
                 display_frame = frame.copy()
                 cv2.putText(display_frame, info, (6, 18), cv2.FONT_HERSHEY_SIMPLEX, 
                            0.6, (255,255,255), 2, cv2.LINE_AA)
-                cv2.imshow("ROI Debug (ESC to close)", display_frame)
+                cv2.imshow(window_name, display_frame)
                 
                 if (cv2.waitKey(1) & 0xFF) == 27:
                     self.debug_open = False
@@ -423,6 +448,7 @@ class App(ctk.CTk):
             "h": self.roi.h
         }
         self.config["key"] = self.var_key.get().strip()
+        self.config["roi_key"] = self.var_roi_key.get().strip()
         
         if self.config_manager.save(self.config):
             messagebox.showinfo("Preset", "Settings berhasil disimpan!")
@@ -498,6 +524,43 @@ class App(ctk.CTk):
             except Exception:
                 pass
             self._tk_bound_pattern = None
+    
+    def _bind_roi_hotkey(self, key: str):
+        """Bind hotkey for ROI calibration."""
+        canonical = self._canonicalize_key(key)
+        if canonical is None:
+            return False, f"Key tidak valid: {key}"
+        
+        # Unbind previous ROI hotkey
+        try:
+            if hasattr(self, '_roi_tk_pattern') and self._roi_tk_pattern:
+                self.unbind_all(self._roi_tk_pattern)
+        except Exception:
+            pass
+        
+        # Try global hotkey first
+        if HAVE_KB:
+            try:
+                keyboard.add_hotkey(canonical, lambda: self._calibrate_from_hotkey())
+                return True, "OK"
+            except Exception:
+                pass
+        
+        # Fallback to local hotkey
+        pattern = self._tk_pattern(canonical)
+        try:
+            self.bind_all(pattern, lambda e: self._calibrate_from_hotkey())
+            self._roi_tk_pattern = pattern
+            return True, "OK"
+        except Exception as e:
+            return False, f"Gagal bind: {e}"
+    
+    def _calibrate_from_hotkey(self):
+        """Calibrate ROI from hotkey press."""
+        try:
+            self.after(0, self.calibrate_by_selection)
+        except Exception:
+            pass
             
     def _bind_hotkey(self, key: str):
         """Bind hotkey for start/stop."""
@@ -654,8 +717,8 @@ class App(ctk.CTk):
         g = max(0.0, min(1.0, self.var_g.get()))
         r = max(0.0, min(1.0, self.var_r.get()))
         try:
-            self.page_home.pb_g.set(g)
-            self.page_home.pb_r.set(r)
+            self.page_home.pb_g.set_value(g)
+            self.page_home.pb_r.set_value(r)
         except Exception:
             pass
             
@@ -665,8 +728,9 @@ class App(ctk.CTk):
                 frame = grab_bgr(self.roi)
                 rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 img = Image.fromarray(rgb)
-                target_w = max(220, min(680, int(self.roi.w * 0.85)))
-                target_h = max(160, min(420, int(self.roi.h * 0.85)))
+                # Smaller preview for compact window
+                target_w = max(180, min(360, int(self.roi.w * 0.7)))
+                target_h = max(120, min(240, int(self.roi.h * 0.7)))
                 self._preview_img = ctk.CTkImage(
                     light_image=img, 
                     dark_image=img, 

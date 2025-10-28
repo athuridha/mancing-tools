@@ -3,6 +3,8 @@
 import tkinter as tk
 import webbrowser
 import customtkinter as ctk
+from .components import (Card, StatusBar, ProgressIndicator, 
+                        ActionButton, CompactSwitch, SettingSlider)
 
 class HomePage:
     """Home page with main controls."""
@@ -19,94 +21,97 @@ class HomePage:
         self.frame.grid_rowconfigure(0, weight=1)
         
         # Left: Controls
+        self._build_left_panel()
+        
+        # Right: Status & Preview
+        self._build_right_panel()
+    
+    def _build_left_panel(self):
+        """Build left control panel."""
         left = ctk.CTkFrame(self.frame)
-        left.grid(row=0, column=0, sticky="nsew", padx=(8,6), pady=8)
+        left.grid(row=0, column=0, sticky="nsew", padx=(6,4), pady=6)
         left.grid_columnconfigure(0, weight=1)
         
-        # Start/Stop header
+        # Start/Stop section
         header = ctk.CTkFrame(left, fg_color="transparent")
-        header.pack(fill="x", padx=10, pady=(10,6))
-        self.btn_start = ctk.CTkButton(header, text="Start (F1)", width=110, 
-                                       command=self.app.toggle_start)
-        self.btn_start.pack(side="left", padx=(0,8))
-        ctk.CTkLabel(header, textvariable=self.app.var_status).pack(side="left")
+        header.pack(fill="x", padx=8, pady=(8,4))
         
-        # Calibration group
-        cal = ctk.CTkFrame(left)
-        cal.pack(fill="x", padx=10, pady=(8,8))
-        ctk.CTkLabel(cal, text="Kalibrasi ROI", 
-                    font=ctk.CTkFont(weight="bold")).pack(anchor="w", padx=10, pady=(10,6))
-        row1 = ctk.CTkFrame(cal, fg_color="transparent")
-        row1.pack(fill="x", padx=10, pady=(0,8))
-        ctk.CTkButton(row1, text="Kursor → ROI", 
-                     command=self.app.calibrate_from_cursor).pack(side="left", padx=(0,8))
-        ctk.CTkButton(row1, text="Drag-select ROI", 
-                     command=self.app.calibrate_by_selection).pack(side="left", padx=8)
-        ctk.CTkButton(row1, text="Debug", 
-                     command=self.app.toggle_debug).pack(side="left", padx=8)
+        self.btn_start = ActionButton(header, text="Start (F1)", primary=True,
+                                      width=100, command=self.app.toggle_start)
+        self.btn_start.pack(side="left", padx=(0,6))
+        
+        StatusBar(header, self.app.var_status, fg_color="transparent").pack(side="left")
+        
+        # Calibration card
+        cal_card = Card(left, title="Kalibrasi ROI", icon="🎯")
+        cal_card.pack(fill="x", padx=8, pady=(6,6))
+        
+        btn_row = ctk.CTkFrame(cal_card.content, fg_color="transparent")
+        btn_row.pack(fill="x", pady=(0,6))
+        
+        # Get ROI key dynamically
+        roi_key = self.app.var_roi_key.get().upper()
+        ActionButton(btn_row, text=f"Drag-select ({roi_key})", width=140,
+                    command=self.app.calibrate_by_selection).pack(side="left", padx=(0,4))
+        ActionButton(btn_row, text="Debug", width=80,
+                    command=self.app.toggle_debug).pack(side="left", padx=4)
         
         # Dimensions
-        dim = ctk.CTkFrame(cal, fg_color="transparent")
-        dim.pack(fill="x", padx=10, pady=(0,12))
-        ctk.CTkLabel(dim, text="W").pack(side="left")
-        ctk.CTkEntry(dim, width=70, textvariable=self.app.var_w).pack(side="left", padx=(6,12))
-        ctk.CTkLabel(dim, text="H").pack(side="left")
-        ctk.CTkEntry(dim, width=70, textvariable=self.app.var_h).pack(side="left", padx=(6,12))
-        ctk.CTkButton(dim, text="Terapkan W/H", command=self.app.apply_wh, 
-                     width=130).pack(side="left")
+        dim = ctk.CTkFrame(cal_card.content, fg_color="transparent")
+        dim.pack(fill="x")
         
-        # Auto-Pause group
-        autopause = ctk.CTkFrame(left)
-        autopause.pack(fill="x", padx=10, pady=(8,8))
-        ctk.CTkLabel(autopause, text="⏸️ Auto-Pause", 
-                    font=ctk.CTkFont(weight="bold")).pack(anchor="w", padx=10, pady=(10,6))
+        ctk.CTkLabel(dim, text="W", font=ctk.CTkFont(size=11)).pack(side="left")
+        ctk.CTkEntry(dim, width=60, textvariable=self.app.var_w, height=26).pack(side="left", padx=(4,8))
+        ctk.CTkLabel(dim, text="H", font=ctk.CTkFont(size=11)).pack(side="left")
+        ctk.CTkEntry(dim, width=60, textvariable=self.app.var_h, height=26).pack(side="left", padx=(4,8))
+        ActionButton(dim, text="Apply", command=self.app.apply_wh, width=80).pack(side="left")
         
-        # Master toggle
-        sw_enabled = ctk.CTkSwitch(autopause, text="Aktifkan Auto-Pause", 
-                                   variable=self.app.var_auto_pause_enabled)
-        sw_enabled.pack(anchor="w", padx=10, pady=(4,2))
+        # Auto-Pause card
+        pause_card = Card(left, title="Auto-Pause", icon="⏸️")
+        pause_card.pack(fill="x", padx=8, pady=(6,6))
         
-        # Sub-options with smaller text
-        sw_typing = ctk.CTkSwitch(autopause, text="  └ Pause saat mengetik", 
-                                  variable=self.app.var_pause_on_typing,
-                                  font=ctk.CTkFont(size=11))
-        sw_typing.pack(anchor="w", padx=10, pady=2)
-        
-        sw_focus = ctk.CTkSwitch(autopause, text="  └ Pause saat Alt+Tab", 
-                                 variable=self.app.var_pause_on_focus_loss,
-                                 font=ctk.CTkFont(size=11))
-        sw_focus.pack(anchor="w", padx=10, pady=(2,8))
-        
-        # Right: Live Status + Preview
+        CompactSwitch(pause_card.content, text="Aktifkan",
+                     variable=self.app.var_auto_pause_enabled).pack(anchor="w", pady=(0,1))
+        CompactSwitch(pause_card.content, text="Pause saat ketik", indent=True,
+                     variable=self.app.var_pause_on_typing).pack(anchor="w", pady=1)
+        CompactSwitch(pause_card.content, text="Pause saat Alt+Tab", indent=True,
+                     variable=self.app.var_pause_on_focus_loss).pack(anchor="w", pady=(1,2))
+    
+    def _build_right_panel(self):
+        """Build right status panel."""
         right = ctk.CTkFrame(self.frame)
-        right.grid(row=0, column=1, sticky="nsew", padx=(6,8), pady=8)
+        right.grid(row=0, column=1, sticky="nsew", padx=(4,6), pady=6)
         right.grid_columnconfigure(0, weight=1)
         right.grid_rowconfigure(3, weight=1)
         
+        # Status header
         head = ctk.CTkFrame(right, fg_color="transparent")
-        head.grid(row=0, column=0, sticky="ew", padx=12, pady=(12,6))
-        ctk.CTkLabel(head, text="Status Live", 
-                    font=ctk.CTkFont(weight="bold")).pack(side="left")
+        head.grid(row=0, column=0, sticky="ew", padx=10, pady=(10,4))
+        ctk.CTkLabel(head, text="📊 Status Live", 
+                    font=ctk.CTkFont(size=13, weight="bold")).pack(side="left")
         
-        # Progress bars
-        bars = ctk.CTkFrame(right)
-        bars.grid(row=1, column=0, sticky="ew", padx=12, pady=6)
-        bars.grid_columnconfigure(1, weight=1)
-        ctk.CTkLabel(bars, text="Green").grid(row=0, column=0, padx=(6,8), pady=(8,4), sticky="w")
-        self.pb_g = ctk.CTkProgressBar(bars, height=16)
-        self.pb_g.grid(row=0, column=1, padx=(0,12), pady=(8,4), sticky="ew")
-        ctk.CTkLabel(bars, text="Red").grid(row=1, column=0, padx=(6,8), pady=(4,8), sticky="w")
-        self.pb_r = ctk.CTkProgressBar(bars, height=16)
-        self.pb_r.grid(row=1, column=1, padx=(0,12), pady=(4,8), sticky="ew")
+        # Progress indicators
+        progress_frame = ctk.CTkFrame(right)
+        progress_frame.grid(row=1, column=0, sticky="ew", padx=10, pady=4)
         
+        self.pb_g = ProgressIndicator(progress_frame, label="Green")
+        self.pb_g.pack(fill="x", pady=(6,3))
+        
+        self.pb_r = ProgressIndicator(progress_frame, label="Red")
+        self.pb_r.pack(fill="x", pady=(3,6))
+        
+        # Action label
         self.lbl_action = ctk.CTkLabel(right, textvariable=self.app.var_act, 
-                                       font=ctk.CTkFont(size=14))
-        self.lbl_action.grid(row=2, column=0, sticky="ew", padx=12, pady=(0,8))
+                                       font=ctk.CTkFont(size=13))
+        self.lbl_action.grid(row=2, column=0, sticky="ew", padx=10, pady=(0,6))
         
+        # Preview
         self.preview = ctk.CTkLabel(right, text="Preview ROI (aktif saat jalan)", 
-                                   width=460, height=300,
-                                   fg_color=("gray20","gray16"), corner_radius=10)
-        self.preview.grid(row=3, column=0, sticky="nsew", padx=12, pady=(6,12))
+                                   width=380, height=240,
+                                   fg_color=("gray20","gray16"), 
+                                   corner_radius=8,
+                                   font=ctk.CTkFont(size=11))
+        self.preview.grid(row=3, column=0, sticky="nsew", padx=10, pady=(4,10))
         
     def pack(self, **kwargs):
         """Pack the frame."""
@@ -136,59 +141,48 @@ class SettingsPage:
         self.scrollable.grid(row=0, column=0, sticky="nsew", padx=8, pady=8)
         self.scrollable.grid_columnconfigure(0, weight=1)
         
-        # Ambang & Interval
-        section1 = ctk.CTkFrame(self.scrollable)
-        section1.grid(row=0, column=0, sticky="ew", padx=12, pady=(12,8))
-        ctk.CTkLabel(section1, text="Ambang & Interval", 
-                    font=ctk.CTkFont(weight="bold")).pack(anchor="w", padx=10, pady=(10,6))
-        self._slider(section1, "Green ratio ≥", self.app.var_green_th, 0.02, 0.50, 0.01)
-        self._slider(section1, "Red ratio ≥", self.app.var_red_th, 0.02, 0.50, 0.01)
-        self._slider(section1, "Click interval (s)", self.app.var_click_i, 0.01, 0.10, 0.001)
-        self._slider(section1, "Idle interval (s)", self.app.var_idle_i, 0.005, 0.05, 0.001)
+        # Threshold & Interval Card
+        card1 = Card(self.scrollable, title="Ambang & Interval", icon="⚙️")
+        card1.grid(row=0, column=0, sticky="ew", padx=12, pady=(12,8))
         
-        # Delay Settings
-        section2 = ctk.CTkFrame(self.scrollable)
-        section2.grid(row=1, column=0, sticky="ew", padx=12, pady=8)
-        ctk.CTkLabel(section2, text="Setting Delay", 
-                    font=ctk.CTkFont(weight="bold")).pack(anchor="w", padx=10, pady=(10,6))
-        self._slider(section2, "Hold awal (s)", self.app.var_hold_s, 0.5, 10.0, 0.1)
-        self._slider(section2, "MouseDown (s)", self.app.var_down_s, 0.005, 0.050, 0.001)
+        SettingSlider(card1.content, "Green ratio ≥", self.app.var_green_th, 
+                     0.02, 0.50, 0.01).pack(fill="x", pady=4)
+        SettingSlider(card1.content, "Red ratio ≥", self.app.var_red_th, 
+                     0.02, 0.50, 0.01).pack(fill="x", pady=4)
+        SettingSlider(card1.content, "Click interval (s)", self.app.var_click_i, 
+                     0.01, 0.10, 0.001).pack(fill="x", pady=4)
+        SettingSlider(card1.content, "Idle interval (s)", self.app.var_idle_i, 
+                     0.005, 0.05, 0.001).pack(fill="x", pady=4)
         
-        # Auto Recast
-        section3 = ctk.CTkFrame(self.scrollable)
-        section3.grid(row=2, column=0, sticky="ew", padx=12, pady=8)
-        ctk.CTkLabel(section3, text="Auto Recast", 
-                    font=ctk.CTkFont(weight="bold")).pack(anchor="w", padx=10, pady=(10,6))
-        self._slider(section3, "Inactivity timeout (s)", self.app.var_inactive_to, 0.4, 3.0, 0.1)
-        self._slider(section3, "Recast delay (s)", self.app.var_recast_delay, 0.0, 1.0, 0.05)
-        sw = ctk.CTkSwitch(section3, text="Aktifkan Auto Recast", 
-                          variable=self.app.var_auto_recast)
-        sw.pack(anchor="w", padx=10, pady=(6,10))
+        # Delay Settings Card
+        card2 = Card(self.scrollable, title="Setting Delay", icon="⏱️")
+        card2.grid(row=1, column=0, sticky="ew", padx=12, pady=8)
         
-        # Preset buttons - Fixed at bottom
+        SettingSlider(card2.content, "Hold awal (s)", self.app.var_hold_s, 
+                     0.5, 10.0, 0.1).pack(fill="x", pady=4)
+        SettingSlider(card2.content, "MouseDown (s)", self.app.var_down_s, 
+                     0.005, 0.050, 0.001).pack(fill="x", pady=4)
+        
+        # Auto Recast Card
+        card3 = Card(self.scrollable, title="Auto Recast", icon="🔄")
+        card3.grid(row=2, column=0, sticky="ew", padx=12, pady=8)
+        
+        SettingSlider(card3.content, "Inactivity timeout (s)", self.app.var_inactive_to, 
+                     0.4, 3.0, 0.1).pack(fill="x", pady=4)
+        SettingSlider(card3.content, "Recast delay (s)", self.app.var_recast_delay, 
+                     0.0, 1.0, 0.05).pack(fill="x", pady=4)
+        
+        CompactSwitch(card3.content, text="Aktifkan Auto Recast", 
+                     variable=self.app.var_auto_recast).pack(anchor="w", pady=(6,4))
+        
+        # Preset buttons
         preset = ctk.CTkFrame(self.scrollable, fg_color="transparent")
         preset.grid(row=3, column=0, sticky="ew", padx=12, pady=(8,12))
-        ctk.CTkButton(preset, text="Simpan Preset", 
-                     command=self.app.save_settings, width=120).pack(side="left", padx=(0,6))
-        ctk.CTkButton(preset, text="Muat Preset", 
-                     command=self.app.load_settings, width=120).pack(side="left", padx=6)
         
-    def _slider(self, parent, text, var, mn, mx, step):
-        """Create a slider row."""
-        row = ctk.CTkFrame(parent, fg_color="transparent")
-        row.pack(fill="x", padx=10, pady=4)
-        ctk.CTkLabel(row, text=text).pack(side="left")
-        s = ctk.CTkSlider(row, from_=mn, to=mx, number_of_steps=int((mx-mn)/step))
-        s.pack(side="left", fill="x", expand=True, padx=10)
-        s.set(var.get())
-        val = ctk.CTkLabel(row, text=f"{var.get():.3f}")
-        val.pack(side="right", padx=6)
-        
-        def _on_change(value):
-            v = round(float(value), 4)
-            var.set(v)
-            val.configure(text=f"{v:.3f}")
-        s.configure(command=_on_change)
+        ActionButton(preset, text="💾 Simpan Preset", 
+                    command=self.app.save_settings, width=140).pack(side="left", padx=(0,6))
+        ActionButton(preset, text="📂 Muat Preset", 
+                    command=self.app.load_settings, width=140).pack(side="left", padx=6)
         
     def pack(self, **kwargs):
         """Pack the frame."""
@@ -205,7 +199,7 @@ class KeybindsPage:
     def __init__(self, parent, app):
         self.frame = ctk.CTkFrame(parent)
         self.app = app
-        self.recording = False
+        self.recording_type = None  # "macro" or "roi"
         self._build()
         
     def _build(self):
@@ -217,103 +211,144 @@ class KeybindsPage:
         # Center content
         center = ctk.CTkFrame(self.frame, fg_color="transparent")
         center.grid(row=0, column=0)
+        center.grid_columnconfigure(0, weight=1)
         
-        # Keybind box
-        box = ctk.CTkFrame(center)
-        box.pack(padx=20, pady=20)
+        # Title section
+        title_frame = ctk.CTkFrame(center, fg_color="transparent")
+        title_frame.pack(pady=(30,20))
         
-        # Title
-        ctk.CTkLabel(box, text="Keybind Start/Stop", 
-                    font=ctk.CTkFont(size=16, weight="bold")).pack(padx=20, pady=(20,10))
+        ctk.CTkLabel(title_frame, text="⌨️ Keybind Settings", 
+                    font=ctk.CTkFont(size=20, weight="bold")).pack()
+        ctk.CTkLabel(title_frame, text="Klik tombol keybind untuk mengubah", 
+                    font=ctk.CTkFont(size=12),
+                    text_color="gray60").pack(pady=(8,0))
         
-        # Description
-        ctk.CTkLabel(box, text="Tekan tombol untuk set keybind baru", 
+        # Keybinds table - clean grid layout
+        table = ctk.CTkFrame(center)
+        table.pack(padx=40, pady=(10,20))
+        
+        # Configure grid weights for proper alignment
+        table.grid_columnconfigure(0, weight=0, minsize=200)  # Label column - fixed width
+        table.grid_columnconfigure(1, weight=0, minsize=120)  # Button column - fixed width
+        table.grid_columnconfigure(2, weight=0, minsize=150)  # Status column - fixed width
+        
+        # Header (optional, can remove if too much)
+        # ctk.CTkLabel(table, text="Function", font=ctk.CTkFont(size=11, weight="bold"),
+        #             text_color="gray60").grid(row=0, column=0, padx=20, pady=(15,10), sticky="w")
+        # ctk.CTkLabel(table, text="Key", font=ctk.CTkFont(size=11, weight="bold"),
+        #             text_color="gray60").grid(row=0, column=1, padx=10, pady=(15,10))
+        
+        # Macro Start/Stop
+        self._build_keybind_row(table, 0, "macro",
+                               "🎣 Start/Stop Macro",
+                               self.app.var_key)
+        
+        # Separator line
+        separator = ctk.CTkFrame(table, height=1, fg_color=("gray70", "gray30"))
+        separator.grid(row=1, column=0, columnspan=3, sticky="ew", padx=20, pady=10)
+        
+        # ROI Calibration
+        self._build_keybind_row(table, 2, "roi",
+                               "🎯 ROI Calibration",
+                               self.app.var_roi_key)
+        
+        # Bottom info
+        info_frame = ctk.CTkFrame(center, fg_color="transparent")
+        info_frame.pack(pady=(15,30))
+        
+        ctk.CTkLabel(info_frame, text="💡 Supported keys: F1-F12, A-Z, 0-9", 
                     font=ctk.CTkFont(size=11),
-                    text_color="gray60").pack(padx=20, pady=(0,15))
-        
-        # Current key display
-        key_frame = ctk.CTkFrame(box)
-        key_frame.pack(padx=20, pady=10, fill="x")
-        
-        ctk.CTkLabel(key_frame, text="Current Key:", 
-                    font=ctk.CTkFont(size=12)).pack(side="left", padx=(10,5), pady=10)
-        
-        self.lbl_current_key = ctk.CTkLabel(key_frame, 
-                                           text=self.app.var_key.get().upper(),
-                                           font=ctk.CTkFont(size=14, weight="bold"),
-                                           text_color="#4ea3ff")
-        self.lbl_current_key.pack(side="left", padx=5, pady=10)
-        
-        # Record button
-        self.btn_record = ctk.CTkButton(box, 
-                                       text="⌨️ Tekan untuk Set Keybind",
-                                       command=self._start_recording,
-                                       width=250,
-                                       height=50,
-                                       font=ctk.CTkFont(size=13, weight="bold"),
-                                       corner_radius=10)
-        self.btn_record.pack(padx=20, pady=(15,10))
-        
-        # Status label
-        self.lbl_status = ctk.CTkLabel(box, text="", 
-                                      font=ctk.CTkFont(size=11),
-                                      wraplength=280)
-        self.lbl_status.pack(padx=20, pady=(5,10))
-        
-        # Hotkey status (global/local)
-        self.lbl_hotkey_status = ctk.CTkLabel(box, text="",
-                                             font=ctk.CTkFont(size=10),
-                                             text_color="gray60",
-                                             wraplength=280)
-        self.lbl_hotkey_status.pack(padx=20, pady=(5,20))
-        
-        # Supported keys info
-        info_frame = ctk.CTkFrame(box, fg_color="transparent")
-        info_frame.pack(padx=20, pady=(10,20))
-        
-        ctk.CTkLabel(info_frame, text="Supported keys:", 
-                    font=ctk.CTkFont(size=10, weight="bold"),
-                    text_color="gray70").pack(anchor="w")
-        ctk.CTkLabel(info_frame, text="• F1-F12 (Function keys)", 
-                    font=ctk.CTkFont(size=9),
-                    text_color="gray60").pack(anchor="w", padx=(10,0))
-        ctk.CTkLabel(info_frame, text="• A-Z (Letters)", 
-                    font=ctk.CTkFont(size=9),
-                    text_color="gray60").pack(anchor="w", padx=(10,0))
-        ctk.CTkLabel(info_frame, text="• 0-9 (Numbers)", 
-                    font=ctk.CTkFont(size=9),
-                    text_color="gray60").pack(anchor="w", padx=(10,0))
+                    text_color="gray55").pack()
     
-    def _start_recording(self):
-        """Start recording key press."""
-        if self.recording:
+    def _build_keybind_row(self, parent, row, bind_type, label, var):
+        """Build a single keybind row with perfect alignment."""
+        # Label - left aligned
+        lbl = ctk.CTkLabel(parent, text=label, 
+                          font=ctk.CTkFont(size=14),
+                          anchor="w")
+        lbl.grid(row=row, column=0, padx=(20,10), pady=18, sticky="w")
+        
+        # Key button - center aligned, consistent width
+        key_btn = ctk.CTkButton(parent,
+                               text=var.get().upper(),
+                               command=lambda: self._start_recording(bind_type),
+                               width=100,
+                               height=38,
+                               font=ctk.CTkFont(size=15, weight="bold"),
+                               fg_color=("gray75", "gray25"),
+                               hover_color=("gray70", "gray30"),
+                               text_color=("#1f538d", "#4ea3ff"),
+                               corner_radius=8)
+        key_btn.grid(row=row, column=1, padx=10, pady=18)
+        
+        # Status label - left aligned, consistent width
+        status_lbl = ctk.CTkLabel(parent, text="",
+                                 font=ctk.CTkFont(size=11),
+                                 width=150,
+                                 anchor="w")
+        status_lbl.grid(row=row, column=2, padx=(10,20), pady=18, sticky="w")
+        
+        # Store references
+        if bind_type == "macro":
+            self.macro_btn = key_btn
+            self.macro_status = status_lbl
+        else:
+            self.roi_btn = key_btn
+            self.roi_status = status_lbl
+    
+    def _start_recording(self, bind_type):
+        """Start recording key press for specific keybind."""
+        if self.recording_type is not None:
             return
             
-        self.recording = True
-        self.btn_record.configure(text="⏸️ Tekan Tombol Sekarang...", 
-                                 fg_color="#FF6B6B")
-        self.lbl_status.configure(text="Menunggu input... (ESC untuk batal)", 
-                                 text_color="#FFD93D")
+        self.recording_type = bind_type
+        
+        if bind_type == "macro":
+            btn = self.macro_btn
+            status = self.macro_status
+        else:
+            btn = self.roi_btn
+            status = self.roi_status
+        
+        # Change button appearance
+        btn.configure(text="...", 
+                     fg_color="#FF6B6B",
+                     hover_color="#FF5555")
+        status.configure(text="Press key (ESC cancel)", 
+                        text_color="#FFD93D")
         
         # Bind key press event
         self.app.bind("<Key>", self._on_key_press)
     
     def _on_key_press(self, event):
         """Handle key press event."""
-        if not self.recording:
+        if self.recording_type is None:
             return
             
+        bind_type = self.recording_type
+        
+        # Get references
+        if bind_type == "macro":
+            btn = self.macro_btn
+            status = self.macro_status
+            var = self.app.var_key
+        else:
+            btn = self.roi_btn
+            status = self.roi_status
+            var = self.app.var_roi_key
+        
         # Unbind immediately
         self.app.unbind("<Key>")
-        self.recording = False
+        self.recording_type = None
         
-        # Reset button
-        self.btn_record.configure(text="⌨️ Tekan untuk Set Keybind", 
-                                 fg_color=["#3B8ED0", "#1F6AA5"])
+        # Reset button appearance
+        btn.configure(fg_color=("gray75", "gray25"),
+                     hover_color=("gray70", "gray30"))
         
         # Check if ESC (cancel)
         if event.keysym == "Escape":
-            self.lbl_status.configure(text="Dibatalkan", text_color="gray60")
+            btn.configure(text=var.get().upper())
+            status.configure(text="")
             return
         
         # Get key name
@@ -321,42 +356,59 @@ class KeybindsPage:
         
         # Validate key
         valid_keys = []
-        # F-keys
         for i in range(1, 13):
             valid_keys.append(f"F{i}")
-        # Letters
         for c in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
             valid_keys.append(c.lower())
-        # Numbers
         for n in "0123456789":
             valid_keys.append(n)
         
         if key.lower() not in [k.lower() for k in valid_keys]:
-            self.lbl_status.configure(text=f"❌ Key '{key}' tidak didukung!", 
-                                     text_color="#FF6B6B")
+            btn.configure(text=var.get().upper())
+            status.configure(text="❌ Invalid key", 
+                           text_color="#FF6B6B")
+            self.app.after(2000, lambda: status.configure(text=""))
             return
         
         # Normalize key name
-        if key.startswith("F") or key.startswith("f"):
-            normalized = key.upper()
-        else:
-            normalized = key.upper()
+        normalized = key.upper()
         
-        # Update UI
-        self.lbl_current_key.configure(text=normalized)
-        self.app.var_key.set(normalized)
+        # Check if key already in use
+        other_var = self.app.var_roi_key if bind_type == "macro" else self.app.var_key
+        if normalized == other_var.get().upper():
+            btn.configure(text=var.get().upper())
+            status.configure(text="❌ Already in use", 
+                           text_color="#FF6B6B")
+            self.app.after(2000, lambda: status.configure(text=""))
+            return
+        
+        # Update button text
+        btn.configure(text=normalized)
+        var.set(normalized)
         
         # Apply keybind
-        ok, msg = self.app._bind_hotkey(normalized)
-        
-        if ok:
-            self.lbl_status.configure(text=f"✅ Keybind set ke: {normalized}", 
-                                     text_color="#6BCF7F")
-            # Update button text in home page
-            self.app._update_button_text()
+        if bind_type == "macro":
+            ok, msg = self.app._bind_hotkey(normalized)
+            if ok:
+                status.configure(text="✅ Updated", text_color="#6BCF7F")
+                self.app._update_button_text()
+            else:
+                status.configure(text="❌ Failed", text_color="#FF6B6B")
         else:
-            self.lbl_status.configure(text=f"❌ Error: {msg}", 
-                                     text_color="#FF6B6B")
+            ok, msg = self.app._bind_roi_hotkey(normalized)
+            if ok:
+                status.configure(text="✅ Updated", text_color="#6BCF7F")
+                # Update home page button if needed
+                try:
+                    # This will be visible after navigation
+                    pass
+                except:
+                    pass
+            else:
+                status.configure(text="❌ Failed", text_color="#FF6B6B")
+        
+        # Clear status after 2 seconds
+        self.app.after(2000, lambda: status.configure(text=""))
         
     def pack(self, **kwargs):
         """Pack the frame."""
