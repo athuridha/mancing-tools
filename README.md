@@ -2,7 +2,7 @@
 
 ### 🎣 Mancing Tools
 
-A highly configurable automation tool for Roblox fishing games using advanced color detection to achieve precision during the fishing minigame.
+Macro Mancing di indovoice
 
 * Forever free and fully open-source
 * Feature-rich with automation and auto-update system
@@ -104,8 +104,6 @@ Mancing Tools automatically checks for updates:
 
 ## 📁 Project Structure
 
-## 📁 Project Structure
-
 ```
 mancing-tools/
 ├── src/
@@ -174,7 +172,7 @@ For questions or community support, join the Discord or create an issue on GitHu
 
 This project is licensed under [MIT License](LICENSE) - feel free to use and modify!
 
-## � Credits
+## Credits
 
 **Developer**: Amar ([@athuridha](https://github.com/athuridha))
 - Roblox: [xinnercy](https://www.roblox.com/share?code=e089bc5df260ea42890e0e800c13faec&type=Profile&source=ProfileShare&stamp=1761572014538)
@@ -192,7 +190,7 @@ This project is licensed under [MIT License](LICENSE) - feel free to use and mod
 
 <div align="center">
 
-Made with ❤️ for the Roblox fishing community
+Made with ❤️ for tukang afk tapi sambil mancing di indovoice
 
 **Happy Fishing! 🎣**
 
