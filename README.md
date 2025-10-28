@@ -176,9 +176,9 @@ This project is licensed under [MIT License](LICENSE) - feel free to use and mod
 
 ## � Credits
 
-**Developer**: lamont ([@xinnercy](https://github.com/xinnercy))
-- Roblox: [xinnercy](https://www.roblox.com/users/8179160997/)
-- Discord: halflucifer
+**Developer**: Amar ([@athuridha](https://github.com/athuridha))
+- Roblox: [xinnercy](https://www.roblox.com/share?code=e089bc5df260ea42890e0e800c13faec&type=Profile&source=ProfileShare&stamp=1761572014538)
+- Discord: [halflucifer](https://discord.gg/SWzSjeF3)
 
 **Technologies Used**:
 - Python 3.8+
