@@ -30,12 +30,7 @@ Mancing Tools was developed with a primary focus on achieving accuracy during fi
 
 and much more!
 
-## 📷 Showcase
-
-![Showcase Example 1](assets/showcase_1.png)
-![Showcase Example 2](assets/showcase_2.png)
-
-## 📦 Installation
+##  Installation
 
 ## 📦 Installation
 
