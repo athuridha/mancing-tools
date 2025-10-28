@@ -38,7 +38,27 @@ and much more!
 Download the compiled executable (.exe) from the [releases page](https://github.com/athuridha/mancing-tools/releases/latest) - no Python installation required.
 
 > [!WARNING]
-> Some antivirus programs may flag the compiled executable as malicious. These are FALSE POSITIVES. You have every right to be suspicious, and you can perform a thorough analysis of both the code and the executable provided.
+> **⚠️ Antivirus False Positive Detection**
+> 
+> Some antivirus programs may flag the compiled executable as malicious. **These are FALSE POSITIVES.**
+> 
+> **Why this happens:**
+> - PyInstaller bundling triggers heuristic detection
+> - Automation features (keyboard, mouse) flagged as "keylogger behavior"
+> - Windows API calls for auto-pause system
+> - Unsigned executable (code signing costs $300-500/year)
+> 
+> **You can verify safety by:**
+> - ✅ Reading the [full source code](https://github.com/athuridha/mancing-tools) (100% open source)
+> - ✅ Building from source yourself (see instructions below)
+> - ✅ Scanning with [VirusTotal](https://www.virustotal.com) (expect 2-5 generic flags from 70+ scanners)
+> - ✅ Reading our [False Positive Info](FALSE_POSITIVE_INFO.md) for technical details
+> 
+> **To allow execution:**
+> - Windows Defender: Click "More info" → "Run anyway"
+> - Or add exclusion: Windows Security → Virus & threat protection → Exclusions → Add folder
+> 
+> **Don't trust us?** Build it yourself! All steps below are transparent. 🔒
 
 ### 2. Run from Source
 ```bash
