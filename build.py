@@ -20,7 +20,7 @@ def build_executable():
     # PyInstaller arguments
     args = [
         'main.py',                          # Entry point
-        '--name=mancing_indovoice',         # Executable name
+        '--name=mancing',                   # Executable name
         '--onefile',                        # Single file
         '--windowed',                       # No console (GUI only)
         '--clean',                          # Clean cache
@@ -28,6 +28,7 @@ def build_executable():
         # Add data files
         '--add-data=src;src',              # Include src folder
         '--add-data=config;config',        # Include config folder (if exists)
+        '--add-data=assets;assets',        # Include assets folder (icon & logo)
         
         # Hidden imports
         '--hidden-import=customtkinter',
@@ -42,8 +43,8 @@ def build_executable():
         # Optimization
         '--optimize=2',
         
-        # Icon (optional - add if you have one)
-        # '--icon=assets/icon.ico',
+        # Icon
+        '--icon=assets/logo.ico',
         
         # Version info
         f'--version-file=version_info.txt',  # Optional: create this file for Windows version info
@@ -51,7 +52,7 @@ def build_executable():
     
     print("Running PyInstaller...")
     PyInstaller.__main__.run(args)
-    print(f"\n✅ Build complete! Executable: dist/mancing_indovoice.exe")
+    print(f"\n✅ Build complete! Executable: dist/mancing.exe")
 
 def create_version_info():
     """Create version info file for Windows executable."""
@@ -82,9 +83,9 @@ VSVersionInfo(
             StringStruct(u'CompanyName', u'Indovoice'),
             StringStruct(u'FileDescription', u'Macro Mancing Indovoice - Roblox Fishing Automation'),
             StringStruct(u'FileVersion', u'{VERSION_INFO['major']}.{VERSION_INFO['minor']}.{VERSION_INFO['patch']}.0'),
-            StringStruct(u'InternalName', u'mancing_indovoice'),
+            StringStruct(u'InternalName', u'mancing'),
             StringStruct(u'LegalCopyright', u'© 2025 lamont (@xinnercy)'),
-            StringStruct(u'OriginalFilename', u'mancing_indovoice.exe'),
+            StringStruct(u'OriginalFilename', u'mancing.exe'),
             StringStruct(u'ProductName', u'Macro Mancing Indovoice'),
             StringStruct(u'ProductVersion', u'{VERSION_INFO['major']}.{VERSION_INFO['minor']}.{VERSION_INFO['patch']}.0')
           ]
@@ -121,7 +122,7 @@ if __name__ == "__main__":
         print("Build successful! 🎉")
         print("=" * 60)
         print("\nNext steps:")
-        print("1. Test the executable: dist/mancing_indovoice.exe")
+        print("1. Test the executable: dist/mancing.exe")
         print("2. Create a GitHub release")
         print("3. Upload the executable as a release asset")
         print("4. Tag the release with version (e.g., v2.0.0)")
