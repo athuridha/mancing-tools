@@ -31,7 +31,30 @@ Fitur baru yang bikin macro lebih aman dan natural!
 
 ---
 
-## 📋 Requirements
+## ⚠️ Important: Antivirus False Positive
+
+**Windows Defender atau antivirus lain mungkin detect sebagai virus - ini FALSE POSITIVE!**
+
+**Kenapa:**
+- PyInstaller bundling + automation features (keyboard, mouse) = antivirus curiga
+- Unsigned executable (code signing mahal $300-500/tahun)
+- File baru = low reputation score
+
+**Cara mengatasi:**
+1. **Allow saat warning**: Klik "More info" → "Run anyway"
+2. **Whitelist folder**: Windows Security → Virus & threat protection → Exclusions → Add folder
+3. **Build sendiri**: Ikuti instruksi di README.md (100% transparent)
+
+**Verify safety:**
+- ✅ [Source code](https://github.com/athuridha/mancing-tools) 100% open source
+- ✅ [False Positive Info](https://github.com/athuridha/mancing-tools/blob/main/FALSE_POSITIVE_INFO.md) - Technical explanation
+- ✅ Scan di [VirusTotal](https://www.virustotal.com) - Expected 2-5 generic flags dari 70+ scanners
+
+**Tidak percaya? Build sendiri dari source!** Semua transparan. 🔒
+
+---
+
+## 📥 Installation
 - Windows 10/11
 - Roblox Indovoice Server
 
