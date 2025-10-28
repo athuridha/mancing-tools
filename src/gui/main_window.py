@@ -14,6 +14,7 @@ from ..core.vision import grab_bgr
 from ..utils.config import ConfigManager
 from ..utils.screen import make_default_roi, clamp_roi
 from ..utils.updater import AutoUpdater
+from ..utils.auto_pause import AutoPauseMonitor
 from ..version import __version__
 from .pages import HomePage, SettingsPage, KeybindsPage, CreditPage
 
@@ -76,6 +77,12 @@ class App(ctk.CTk):
         self.engine.set_callback("on_red_ratio", self._on_red_ratio)
         self.engine.set_callback("on_action", self._on_action)
         
+        # Auto-pause monitor
+        self.auto_pause_monitor = AutoPauseMonitor(
+            pause_callback=self._on_auto_pause,
+            resume_callback=self._on_auto_resume
+        )
+        
         # UI Variables
         self.var_g = tk.DoubleVar(value=0.0)
         self.var_r = tk.DoubleVar(value=0.0)
@@ -92,6 +99,12 @@ class App(ctk.CTk):
         self.var_inactive_to = tk.DoubleVar(value=self.config.get("inactive_to", 1.2))
         self.var_recast_delay = tk.DoubleVar(value=self.config.get("recast_delay", 0.30))
         self.var_auto_recast = tk.BooleanVar(value=self.config.get("auto_recast", True))
+        
+        # Auto-pause variables
+        self.var_auto_pause_enabled = tk.BooleanVar(value=self.config.get("auto_pause_enabled", False))
+        self.var_pause_on_typing = tk.BooleanVar(value=self.config.get("pause_on_typing", True))
+        self.var_pause_on_focus_loss = tk.BooleanVar(value=self.config.get("pause_on_focus_loss", True))
+        self.var_auto_pause_resume_delay = tk.DoubleVar(value=self.config.get("auto_pause_resume_delay", 2.0))
         
         # ROI variables
         roi_config = self.config.get("roi", {})
@@ -189,6 +202,18 @@ class App(ctk.CTk):
     def _on_action(self, action: str):
         """Callback for action update."""
         self.var_act.set(action)
+    
+    def _on_auto_pause(self):
+        """Callback when auto-pause triggers."""
+        if self.running:
+            self.engine.pause()
+            print("[AutoPause] Macro paused")
+    
+    def _on_auto_resume(self):
+        """Callback when auto-pause resumes."""
+        if self.running:
+            self.engine.resume()
+            print("[AutoPause] Macro resumed")
         
     # ==================== UI Controls ====================
     
@@ -200,11 +225,23 @@ class App(ctk.CTk):
             self._update_button_text()
             self.var_status.set("Running")
             self._update_config()
+            
+            # Start auto-pause monitor if enabled
+            if self.var_auto_pause_enabled.get():
+                self.auto_pause_monitor.set_pause_on_typing(self.var_pause_on_typing.get())
+                self.auto_pause_monitor.set_pause_on_focus_loss(self.var_pause_on_focus_loss.get())
+                self.auto_pause_monitor.set_resume_delay(self.var_auto_pause_resume_delay.get())
+                self.auto_pause_monitor.start()
+            
             self.worker = threading.Thread(target=self._run_engine, daemon=True)
             self.worker.start()
         else:
             self.running = False
             self.engine.stop()
+            
+            # Stop auto-pause monitor
+            if self.auto_pause_monitor.is_running:
+                self.auto_pause_monitor.stop()
             self._update_button_text()
             self.var_status.set("Stopped")
             
@@ -368,6 +405,11 @@ class App(ctk.CTk):
             "inactive_to": self.var_inactive_to.get(),
             "recast_delay": self.var_recast_delay.get(),
             "auto_recast": self.var_auto_recast.get(),
+            # Auto-pause settings
+            "auto_pause_enabled": self.var_auto_pause_enabled.get(),
+            "pause_on_typing": self.var_pause_on_typing.get(),
+            "pause_on_focus_loss": self.var_pause_on_focus_loss.get(),
+            "auto_pause_resume_delay": self.var_auto_pause_resume_delay.get(),
         })
         self.engine.config = self.config
         

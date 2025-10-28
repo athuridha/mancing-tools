@@ -32,6 +32,7 @@ class FishingEngine:
         """
         self.config = config
         self.running = False
+        self.paused = False  # Auto-pause state
         self.last_active_ts = time.time()
         self.callbacks = {
             "on_green_ratio": None,
@@ -86,6 +87,12 @@ class FishingEngine:
             
             # Main monitoring loop
             while self.running:
+                # Check if paused by auto-pause system
+                if self.paused:
+                    self._notify("on_action", "⏸️ Auto-Paused...")
+                    time.sleep(0.5)
+                    continue
+                
                 frame = grab_bgr(roi)
                 g_ratio, r_ratio = calc_color_ratios(frame)
                 
@@ -138,3 +145,11 @@ class FishingEngine:
     def stop(self):
         """Stop the fishing engine."""
         self.running = False
+    
+    def pause(self):
+        """Pause the fishing engine (for auto-pause)."""
+        self.paused = True
+    
+    def resume(self):
+        """Resume the fishing engine (from auto-pause)."""
+        self.paused = False

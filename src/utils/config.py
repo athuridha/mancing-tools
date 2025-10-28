@@ -18,6 +18,11 @@ DEFAULT_CONFIG = {
     "auto_recast": True,
     "active_min_ratio": 0.03,
     "key": "F1",
+    # Auto-pause settings
+    "auto_pause_enabled": False,
+    "pause_on_typing": True,
+    "pause_on_focus_loss": True,
+    "auto_pause_resume_delay": 2.0,
 }
 
 class ConfigManager:

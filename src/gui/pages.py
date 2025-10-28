@@ -143,9 +143,41 @@ class SettingsPage:
                           variable=self.app.var_auto_recast)
         sw.pack(anchor="w", padx=10, pady=(6,10))
         
+        # Auto-Pause Section
+        section4 = ctk.CTkFrame(self.scrollable)
+        section4.grid(row=3, column=0, sticky="ew", padx=12, pady=8)
+        ctk.CTkLabel(section4, text="⏸️ Auto-Pause", 
+                    font=ctk.CTkFont(weight="bold")).pack(anchor="w", padx=10, pady=(10,6))
+        
+        # Master toggle
+        sw_enabled = ctk.CTkSwitch(section4, text="Aktifkan Auto-Pause", 
+                                   variable=self.app.var_auto_pause_enabled)
+        sw_enabled.pack(anchor="w", padx=10, pady=(6,4))
+        
+        # Sub-options
+        sw_typing = ctk.CTkSwitch(section4, text="  └ Pause saat mengetik di game", 
+                                  variable=self.app.var_pause_on_typing)
+        sw_typing.pack(anchor="w", padx=10, pady=2)
+        
+        sw_focus = ctk.CTkSwitch(section4, text="  └ Pause saat window loses focus", 
+                                 variable=self.app.var_pause_on_focus_loss)
+        sw_focus.pack(anchor="w", padx=10, pady=2)
+        
+        # Resume delay
+        self._slider(section4, "  └ Resume delay (s)", 
+                    self.app.var_auto_pause_resume_delay, 0.5, 5.0, 0.5)
+        
+        # Info text
+        info = ctk.CTkLabel(section4, 
+                           text="💡 Auto-pause akan menghentikan sementara macro\nsaat Anda mengetik atau Alt+Tab keluar game",
+                           font=ctk.CTkFont(size=10),
+                           text_color="gray60",
+                           justify="left")
+        info.pack(anchor="w", padx=10, pady=(6,10))
+        
         # Preset buttons - Fixed at bottom
         preset = ctk.CTkFrame(self.scrollable, fg_color="transparent")
-        preset.grid(row=3, column=0, sticky="ew", padx=12, pady=(8,12))
+        preset.grid(row=4, column=0, sticky="ew", padx=12, pady=(8,12))
         ctk.CTkButton(preset, text="Simpan Preset", 
                      command=self.app.save_settings, width=120).pack(side="left", padx=(0,6))
         ctk.CTkButton(preset, text="Muat Preset", 
