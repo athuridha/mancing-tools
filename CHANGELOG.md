@@ -7,12 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### In Development
-- 🚧 **Auto-Pause System** (v1.1.0)
-  - Pause macro when typing in game
-  - Pause when Roblox window loses focus
-  - Auto-resume after configurable delay
-  - Toggle on/off in settings
+---
+
+## [1.1.0] - 2025-10-28
+
+### Added
+- ⏸️ **Auto-Pause System**: Intelligent macro pausing
+  - Automatically pause when typing in Roblox window
+  - Automatically pause when Alt+Tab from Roblox (focus loss)
+  - Configurable resume delay (default 2 seconds)
+  - Toggle controls in Home page for easy access
+  - Separate toggles: "Pause saat mengetik" and "Pause saat Alt+Tab"
+  - Real-time status indicator shows "⏸️ Auto-Paused..." during pause
+- 🔧 **New Dependencies**: pywin32, psutil, pynput for Windows integration
+
+### Changed
+- 🎛️ Moved auto-pause controls from Settings to Home page for better UX
+- 📦 Build size optimized to 58.1 MB (from 60.6 MB)
 
 ---
 
@@ -68,7 +79,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### [1.1.0] - Planned
 - [ ] Statistics tracking (total catches, catches per hour, session time)
 - [ ] Profile system (save multiple presets dengan nama)
-- [ ] **Auto-Pause System** (pause when typing, window loses focus, player interaction)
 - [ ] Discord webhook notifications (catches milestone, errors, session summary)
 - [ ] Sound/visual alerts (when stopped, rare catch, etc.)
 - [ ] Failsafe system (max runtime, emergency stop, random delays)
