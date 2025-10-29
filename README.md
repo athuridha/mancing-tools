@@ -20,14 +20,13 @@ made with ❤️ by lamont
 Mancing Tools was developed with a primary focus on achieving accuracy during fishing minigames. It has since expanded to include several powerful features:
 
 * **Advanced Color Detection**: HSV-based green bar detection with customizable thresholds for precise timing.
-* **Modern GUI with Components**: Professional interface with clean layout optimized for macro usage.
-* **Customizable Keybinds**: Dual hotkey system (macro control + ROI calibration) with press-to-bind setup.
-* **Auto-Pause System**: Smart pause when typing or Alt+Tab detected, automatically resumes after configurable delay.
-* **ROI Calibration Tools**: Quick drag-select with hotkey support, app auto-minimizes for clear screen view.
-* **Enhanced Debug Window**: OpenCV-powered visual overlay with always-on-top display for better visibility.
 * **Auto-Update System**: Automatically checks for updates and provides one-click installation from GitHub releases.
+* **Modern UI**: Sleek dark-themed interface with scrollable pages and responsive layouts.
+* **Press-to-Bind Keybinds**: Intuitive hotkey setup by simply pressing the desired key.
+* **ROI Calibration Tools**: Multiple methods including drag-select with auto-minimize for clear screen view.
+* **Real-time Debug Window**: OpenCV-powered visual overlay showing detection zones and color ratios.
 * **Preset System**: Save and load configurations with JSON-based settings management.
-* **Auto Recast**: Intelligent automatic rod casting after minigame completion with configurable delays.
+* **Auto Recast**: Intelligent automatic rod casting after minigame completion.
 
 and much more!
 
@@ -79,20 +78,13 @@ Compile yourself: `python build.py`
 ### Setup
 1. Launch `mancing.exe`
 2. Position your Roblox fishing game window
-3. Click **"Drag-select (F2)"** and select the fishing bar area
+3. Click **"Drag-select ROI"** and select the fishing bar area
 4. Press **F1** or click **"Start"** to begin fishing
 
-### Default Keybinds
+### Default Keybind
 - **F1**: Start/Stop macro
-- **F2**: ROI Calibration (drag-select)
 
-Both keybinds can be customized in the **Keybinds** tab with press-to-bind system.
-
-### Auto-Pause (NEW!)
-Enable in the **Home** tab to automatically pause when:
-- Typing is detected (chat, inventory, etc.)
-- Alt+Tab to another window
-- Configurable resume delay after activity stops
+Keybind can be customized in the **Keybinds** tab with press-to-bind system.
 
 ## ⚙️ Configuration
 
@@ -110,9 +102,9 @@ Navigate to **Settings** tab to adjust:
 - Presets are saved in `config/presets/` folder
 
 ### ROI Calibration Methods
-1. **Drag-select (F2)**: Click button or press F2, then click and drag to select area (app auto-minimizes for clear view)
-2. **Manual W/H**: Enter specific dimensions in Home tab and click "Apply"
-3. **Debug Mode**: Visual overlay to verify detection zone in real-time (always stays on top)
+1. **Drag-select ROI**: Click and drag to select area (app auto-minimizes for clear view)
+2. **Kursor → ROI**: Center ROI at current mouse position
+3. **Manual W/H**: Enter specific dimensions in settings
 
 ## 🔄 Auto-Update System
 
@@ -140,13 +132,11 @@ mancing-tools/
 │   │   └── vision.py      # Color detection & screen capture
 │   ├── gui/               # User interface
 │   │   ├── main_window.py # Main application window
-│   │   ├── pages.py       # UI pages (Home, Settings, Keybinds, Credit)
-│   │   └── components.py  # Reusable UI components (NEW!)
+│   │   └── pages.py       # UI pages (Home, Settings, Keybinds, Credit)
 │   ├── utils/             # Utilities
 │   │   ├── config.py      # Configuration management
 │   │   ├── updater.py     # Auto-update system
-│   │   ├── screen.py      # Screen utilities
-│   │   └── auto_pause.py  # Auto-pause monitor (NEW!)
+│   │   └── screen.py      # Screen utilities
 │   └── version.py         # Version information
 ├── assets/                # Icons and images
 │   ├── logo.ico           # Application icon
@@ -171,12 +161,11 @@ mancing-tools/
 - Try running as Administrator for global hotkeys
 - Make sure no other application is using the same key
 - Check antivirus isn't blocking keyboard hooks
-- Customize keybinds in **Keybinds** tab if default keys conflict
 
 ### Detection Not Accurate
-- Recalibrate ROI to match fishing bar exactly (use F2 for drag-select)
+- Recalibrate ROI to match fishing bar exactly
 - Adjust green/red thresholds in **Settings** tab
-- Enable **Debug** mode to see detection overlay in real-time (window stays on top)
+- Enable **Debug** mode to see detection overlay in real-time
 - Try different lighting settings in-game
 
 ### Application Won't Start
@@ -214,13 +203,8 @@ This project is licensed under [MIT License](LICENSE) - feel free to use and mod
 - CustomTkinter (Modern GUI)
 - OpenCV (Computer Vision)
 - MSS (Screen Capture)
-- PyAutoGUI + Keyboard (Automation)
-- PSUtil + PyWin32 (Auto-Pause System)
+- PyAutoGUI (Automation)
 - Requests (Auto-Update)
-
-**Special Thanks**:
-- Community feedback for feature requests
-- Beta testers for bug reports
 
 ---
 

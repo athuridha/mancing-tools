@@ -7,22 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added (v1.2.0-dev)
-- 🎨 **Component-Based Architecture**: Professional modular GUI system
-  - `src/gui/components.py` with 6 reusable components
-  - Card, StatusBar, ProgressIndicator, ActionButton, SettingSlider, CompactSwitch
-- ⌨️ **Dual Keybind System**: Separate customizable hotkeys
-  - ROI Calibration hotkey (default F2)
-  - Macro Start/Stop hotkey (default F1)
-  - Conflict detection prevents duplicate keys
-- 🎯 **Enhanced ROI Calibration**: F2 hotkey for quick drag-select
-- 🪟 **Always-On-Top Debug Window**: Debug overlay stays above game window
-- 📐 **Compact Window Design**: Reduced from 1100x700 to 900x600
+---
 
-### Changed (v1.2.0-dev)
-- 🏗️ **Major Refactor**: HomePage, SettingsPage, KeybindsPage now use components
-- 📦 **Build Optimization**: Reduced to ~57 MB
-- 🎛️ **UI Layout**: Modern table layout in Keybinds page with fixed grid alignment
+## [1.2.0] - 2025-10-29
+
+### Added
+- 🎯 **Simple Mode**: Compact window view with essential controls (default startup)
+  - Aplikasi sekarang langsung buka Simple Mode by default
+  - Toggle ke Advance Mode dengan button di Simple Mode
+  - Compact 350x280 window dengan Start/Stop, ROI calibration, dan status
+  - Always-on-top simple window untuk easy access saat gaming
+  - Quick access ke Settings dan Advance Mode
+- 🖥️ **Advance Mode**: Full window dengan semua fitur lengkap
+  - Toggle dari Simple Mode untuk akses fitur advanced
+  - Button "Simple" di topbar untuk kembali ke Simple Mode
+  - Semua pages: Home, Settings, Keybinds, Credit
+- 📥 **System Tray Integration**: Minimize to system tray functionality
+  - Minimize button (Tray) di topbar untuk hiding ke tray
+  - System tray icon dengan context menu
+  - Right-click tray menu: Show, Simple Mode, Start/Stop, Exit
+  - Double-click tray icon untuk restore window
+
+### Changed
+- 🎨 Default startup mode sekarang Simple Mode (lebih user-friendly)
+- 🎨 Enhanced topbar dengan utility buttons (Simple & Tray) untuk better UX
+- 🔧 Improved window management dan state handling
+- 📝 Renamed "Mini Mode" menjadi "Simple Mode" dan "Full Mode" menjadi "Advance Mode"
 
 ---
 
@@ -93,18 +103,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Future Plans
 
-### [1.3.0] - Planned
+### [1.1.0] - Planned
 - [ ] Statistics tracking (total catches, catches per hour, session time)
 - [ ] Profile system (save multiple presets dengan nama)
 - [ ] Discord webhook notifications (catches milestone, errors, session summary)
 - [ ] Sound/visual alerts (when stopped, rare catch, etc.)
-
-### [1.4.0] - Ideas
 - [ ] Failsafe system (max runtime, emergency stop, random delays)
 - [ ] Session scheduler (auto start/stop pada waktu tertentu)
+
+### [1.2.0] - Ideas
 - [ ] Plugin system for extensibility
 - [ ] Cloud sync for settings
 - [ ] Mobile app for remote control
+- [ ] Anti-detection features
 - [ ] Multi-monitor support improvements
 
 ---

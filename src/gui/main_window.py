@@ -15,8 +15,10 @@ from ..utils.config import ConfigManager
 from ..utils.screen import make_default_roi, clamp_roi
 from ..utils.updater import AutoUpdater
 from ..utils.auto_pause import AutoPauseMonitor
+from ..utils.system_tray import SystemTrayManager
 from ..version import __version__
 from .pages import HomePage, SettingsPage, KeybindsPage, CreditPage
+from .simple_window import SimpleWindow
 
 # Windows DPI awareness
 try:
@@ -92,6 +94,13 @@ class App(ctk.CTk):
             resume_callback=self._on_auto_resume
         )
         
+        # System tray manager
+        self.tray_manager = SystemTrayManager(self)
+        
+        # Simple mode
+        self.simple_window = None
+        self.is_simple_mode = False
+        
         # UI Variables
         self.var_g = tk.DoubleVar(value=0.0)
         self.var_r = tk.DoubleVar(value=0.0)
@@ -138,11 +147,26 @@ class App(ctk.CTk):
         # Bind F2 for drag-select ROI (or custom key)
         self._bind_roi_hotkey(self.var_roi_key.get())
         
+        # Handle window close
+        self.protocol("WM_DELETE_WINDOW", self.on_closing)
+        
         # Start UI update loop
         self._tick_ui()
         
         # Check for updates on startup (non-blocking)
         self.after(2000, lambda: threading.Thread(target=self._check_updates_silent, daemon=True).start())
+        
+        # Start in Simple Mode by default
+        self.after(100, self.enter_simple_mode)
+    
+    def iconify(self):
+        """Override iconify to minimize to tray instead (in Advance Mode)."""
+        if not self.is_simple_mode:
+            # When user clicks minimize in Advance Mode, go to tray
+            self.minimize_to_tray()
+        else:
+            # In Simple Mode, use default behavior
+            super().iconify()
         
     def _build_ui(self):
         """Build the user interface."""
@@ -164,16 +188,16 @@ class App(ctk.CTk):
         
     def _build_topbar(self):
         """Build top navigation bar."""
-        top = ctk.CTkFrame(self, corner_radius=0, height=70)
+        top = ctk.CTkFrame(self, corner_radius=0, height=65, fg_color=("#2B2B2B", "#1F1F1F"))
         top.pack(side="top", fill="x")
         top.pack_propagate(False)
         
         # Left: Logo & Title
         left_frame = ctk.CTkFrame(top, fg_color="transparent")
-        left_frame.pack(side="left", padx=20, pady=15)
+        left_frame.pack(side="left", padx=20, pady=12)
         
-        title = ctk.CTkLabel(left_frame, text="🎣 Macro Mancing Indovoice",
-                            font=ctk.CTkFont(size=20, weight="bold"))
+        title = ctk.CTkLabel(left_frame, text="🎣 Mancing Tools",
+                            font=ctk.CTkFont(size=18, weight="bold"))
         title.pack(side="left")
         
         # Version badge
@@ -181,8 +205,8 @@ class App(ctk.CTk):
         version_badge = ctk.CTkLabel(left_frame, text=f"v{__version__}",
                                     font=ctk.CTkFont(size=10),
                                     fg_color=("#3B8ED0", "#1F6AA5"),
-                                    corner_radius=6,
-                                    padx=8, pady=2)
+                                    corner_radius=5,
+                                    padx=8, pady=3)
         version_badge.pack(side="left", padx=(10,0))
         
         # Right: Menu buttons
@@ -192,10 +216,19 @@ class App(ctk.CTk):
             values=["Home", "Settings", "Keybinds", "Credit"],
             variable=self.menu_var, 
             command=self._on_menu_change,
-            height=36,
-            font=ctk.CTkFont(size=13)
+            height=38,
+            font=ctk.CTkFont(size=13),
+            corner_radius=8
         )
-        menu.pack(side="right", padx=20, pady=15)
+        menu.pack(side="right", padx=20, pady=12)
+        
+        # Simple mode button
+        ctk.CTkButton(top, text="📐 Simple Mode", width=120, height=38,
+                     command=self.toggle_simple_mode,
+                     corner_radius=8,
+                     font=ctk.CTkFont(size=12, weight="bold"),
+                     fg_color=("#2FA572", "#2FA572"),
+                     hover_color=("#258A5E", "#258A5E")).pack(side="right", padx=(0, 10))
         
     def _on_menu_change(self, value):
         """Handle menu selection change."""
@@ -277,14 +310,6 @@ class App(ctk.CTk):
     def _run_engine(self):
         """Run the fishing engine in a separate thread."""
         self.engine.run(self.roi)
-        
-    def _update_button_text(self):
-        """Update start/stop button text with current keybind."""
-        key = self.var_key.get().strip().upper()
-        if self.running:
-            self.page_home.btn_start.configure(text=f"Stop ({key})")
-        else:
-            self.page_home.btn_start.configure(text=f"Start ({key})")
             
     def apply_wh(self):
         """Apply width/height changes to ROI."""
@@ -744,3 +769,88 @@ class App(ctk.CTk):
                 )
                 
         self.after(120, self._tick_ui)
+    
+    # ==================== Simple Mode & System Tray ====================
+    
+    def toggle_simple_mode(self):
+        """Toggle between simple mode and advance mode."""
+        if self.is_simple_mode:
+            self.exit_simple_mode()
+        else:
+            self.enter_simple_mode()
+    
+    def enter_simple_mode(self):
+        """Enter simple mode."""
+        if self.is_simple_mode:
+            return
+        
+        self.is_simple_mode = True
+        self.withdraw()  # Hide main window
+        
+        # Create and show simple window
+        self.simple_window = SimpleWindow(self)
+        self.simple_window.focus_force()
+    
+    def exit_simple_mode(self):
+        """Exit simple mode back to advance window."""
+        if not self.is_simple_mode:
+            return
+        
+        self.is_simple_mode = False
+        
+        # Destroy simple window
+        if self.simple_window:
+            try:
+                self.simple_window.destroy()
+            except Exception:
+                pass
+            self.simple_window = None
+        
+        # Show main window
+        self.deiconify()
+        self.lift()
+        self.focus_force()
+    
+    def minimize_to_tray(self):
+        """Minimize application to system tray."""
+        self.tray_manager.minimize_to_tray()
+    
+    def on_closing(self):
+        """Handle application close."""
+        # Stop engine if running
+        if self.running:
+            self.running = False
+            self.engine.stop()
+            if self.auto_pause_monitor.is_running:
+                self.auto_pause_monitor.stop()
+        
+        # Stop system tray
+        self.tray_manager.stop()
+        
+        # Save settings
+        self._update_config()
+        self.config["roi"] = {
+            "x": self.roi.x, 
+            "y": self.roi.y, 
+            "w": self.roi.w, 
+            "h": self.roi.h
+        }
+        self.config["key"] = self.var_key.get().strip()
+        self.config["roi_key"] = self.var_roi_key.get().strip()
+        self.config_manager.save(self.config)
+        
+        # Destroy window
+        self.quit()
+        self.destroy()
+    
+    def _update_button_text(self):
+        """Update start/stop button text with current keybind."""
+        key = self.var_key.get().strip().upper()
+        if self.running:
+            self.page_home.btn_start.configure(text=f"Stop ({key})")
+            if self.is_simple_mode and self.simple_window:
+                self.simple_window.update_start_button()
+        else:
+            self.page_home.btn_start.configure(text=f"Start ({key})")
+            if self.is_simple_mode and self.simple_window:
+                self.simple_window.update_start_button()

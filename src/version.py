@@ -1,9 +1,9 @@
 """Version information for auto-update system."""
 
-__version__ = "1.1.0"
+__version__ = "1.2.0"
 VERSION_INFO = {
     "major": 1,
-    "minor": 1,
+    "minor": 2,
     "patch": 0,
 }
 

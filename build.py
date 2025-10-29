@@ -27,10 +27,29 @@ def build_executable():
         
         # Add data files
         '--add-data=src;src',              # Include src folder
-        '--add-data=config;config',        # Include config folder (if exists)
         '--add-data=assets;assets',        # Include assets folder (icon & logo)
         
-        # Hidden imports
+        # Exclude unnecessary modules to reduce size
+        '--exclude-module=matplotlib',
+        '--exclude-module=pandas',
+        '--exclude-module=scipy',
+        '--exclude-module=pytest',
+        '--exclude-module=IPython',
+        '--exclude-module=notebook',
+        '--exclude-module=tkinter.test',
+        '--exclude-module=unittest',
+        '--exclude-module=doctest',
+        '--exclude-module=cv2.aruco',
+        '--exclude-module=cv2.bgsegm',
+        '--exclude-module=cv2.bioinspired',
+        '--exclude-module=cv2.dnn',
+        '--exclude-module=cv2.face',
+        '--exclude-module=cv2.ml',
+        '--exclude-module=cv2.objdetect',
+        '--exclude-module=cv2.videoio',
+        '--exclude-module=cv2.video',
+        
+        # Hidden imports (only essential)
         '--hidden-import=customtkinter',
         '--hidden-import=PIL._tkinter_finder',
         '--hidden-import=keyboard',
@@ -39,26 +58,24 @@ def build_executable():
         '--hidden-import=numpy',
         '--hidden-import=requests',
         '--hidden-import=packaging',
-        
-        # Exclude unnecessary modules to reduce size
-        '--exclude-module=matplotlib',
-        '--exclude-module=scipy',
-        '--exclude-module=pandas',
-        '--exclude-module=tkinter.test',
-        '--exclude-module=unittest',
-        '--exclude-module=test',
-        '--exclude-module=pydoc',
-        '--exclude-module=doctest',
+        '--hidden-import=pystray',
+        '--hidden-import=pystray._win32',
+        '--hidden-import=win32api',
+        '--hidden-import=win32con',
+        '--hidden-import=win32gui',
+        '--hidden-import=psutil',
+        '--hidden-import=pynput',
         
         # Optimization
         '--optimize=2',
-        '--noupx',                          # Disable UPX (sometimes causes issues)
+        '--strip',                          # Strip debug symbols
+        '--noupx',                          # Disable UPX (sometimes makes it bigger)
         
         # Icon
         '--icon=assets/logo.ico',
         
         # Version info
-        f'--version-file=version_info.txt',  # Optional: create this file for Windows version info
+        f'--version-file=version_info.txt',
     ]
     
     print("Running PyInstaller...")
