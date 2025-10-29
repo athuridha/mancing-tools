@@ -121,7 +121,7 @@ class App(ctk.CTk):
         # Auto-pause variables
         self.var_auto_pause_enabled = tk.BooleanVar(value=self.config.get("auto_pause_enabled", False))
         self.var_pause_on_typing = tk.BooleanVar(value=self.config.get("pause_on_typing", True))
-        self.var_pause_on_focus_loss = tk.BooleanVar(value=self.config.get("pause_on_focus_loss", True))
+        self.var_pause_on_focus_loss = tk.BooleanVar(value=self.config.get("pause_on_focus_loss", False))  # Default OFF
         self.var_auto_pause_resume_delay = tk.DoubleVar(value=self.config.get("auto_pause_resume_delay", 2.0))
         
         # ROI variables
@@ -223,7 +223,7 @@ class App(ctk.CTk):
         menu.pack(side="right", padx=20, pady=12)
         
         # Simple mode button
-        ctk.CTkButton(top, text="📐 Simple Mode", width=120, height=38,
+        ctk.CTkButton(top, text="Simple Mode", width=120, height=38,
                      command=self.toggle_simple_mode,
                      corner_radius=8,
                      font=ctk.CTkFont(size=12, weight="bold"),

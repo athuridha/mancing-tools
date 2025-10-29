@@ -30,7 +30,7 @@ class AutoPauseMonitor:
         
         # Settings
         self.pause_on_typing = True
-        self.pause_on_focus_loss = True
+        self.pause_on_focus_loss = False  # Default OFF - allow macro to run in background
         self.resume_delay = 2.0  # seconds after last activity to resume
         self.roblox_window_title = "Roblox"  # Partial match
         

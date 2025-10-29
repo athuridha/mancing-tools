@@ -9,6 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.2.1] - 2025-10-29
+
+### Fixed
+- 🐛 **Always-on-top Issue**: Removed forced always-on-top from Simple Mode
+  - Window tidak lagi selalu di depan (mengganggu saat buka aplikasi lain)
+  - User bisa bebas switch window tanpa terganggu
+- 🎮 **Background Macro**: Macro tetap jalan walaupun buka aplikasi lain
+  - Disabled "Pause on Focus Loss" by default
+  - Vision detection tetap jalan di background
+  - User bisa browsing, chat, atau buka aplikasi lain saat macro running
+  - Safety: Pause on typing tetap aktif untuk keamanan
+
+### Changed
+- Default setting "Pause on Focus Loss" diubah dari ON menjadi OFF
+- Simple Mode window sekarang behave seperti window normal (tidak always-on-top)
+
+---
+
 ## [1.2.0] - 2025-10-29
 
 ### Added

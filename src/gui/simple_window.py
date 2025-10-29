@@ -16,12 +16,9 @@ class SimpleWindow(ctk.CTkToplevel):
         super().__init__(parent_app)
         
         self.app = parent_app
-        self.title("🎣 Mancing Simple")
+        self.title("🎣 Macro Mancing Indovoice")
         self.geometry("400x340")
         self.resizable(False, False)
-        
-        # Keep on top
-        self.attributes("-topmost", True)
         
         # Center on screen
         self.update_idletasks()
@@ -144,6 +141,6 @@ class SimpleWindow(ctk.CTkToplevel):
         """Update start/stop button text."""
         key = self.app.var_key.get().upper()
         if self.app.running:
-            self.btn_start.configure(text=f"⏹ Stop ({key})")
+            self.btn_start.configure(text=f"Stop ({key})")
         else:
-            self.btn_start.configure(text=f"▶ Start ({key})")
+            self.btn_start.configure(text=f" Start ({key})")
