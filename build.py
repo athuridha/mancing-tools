@@ -40,8 +40,19 @@ def build_executable():
         '--hidden-import=requests',
         '--hidden-import=packaging',
         
+        # Exclude unnecessary modules to reduce size
+        '--exclude-module=matplotlib',
+        '--exclude-module=scipy',
+        '--exclude-module=pandas',
+        '--exclude-module=tkinter.test',
+        '--exclude-module=unittest',
+        '--exclude-module=test',
+        '--exclude-module=pydoc',
+        '--exclude-module=doctest',
+        
         # Optimization
         '--optimize=2',
+        '--noupx',                          # Disable UPX (sometimes causes issues)
         
         # Icon
         '--icon=assets/logo.ico',
