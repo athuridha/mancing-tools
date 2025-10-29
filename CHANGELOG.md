@@ -7,63 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
----
-
-## [1.2.0] - 2025-10-29
-
-### Added
+### Added (v1.2.0-dev)
 - 🎨 **Component-Based Architecture**: Professional modular GUI system
   - `src/gui/components.py` with 6 reusable components
-  - `Card`: Container with title and icon
-  - `StatusBar`: Status indicator with live updates
-  - `ProgressIndicator`: Labeled progress bar
-  - `ActionButton`: Styled button with primary/secondary variants
-  - `SettingSlider`: Slider with live value display
-  - `CompactSwitch`: Switch with optional indent support
+  - Card, StatusBar, ProgressIndicator, ActionButton, SettingSlider, CompactSwitch
 - ⌨️ **Dual Keybind System**: Separate customizable hotkeys
   - ROI Calibration hotkey (default F2)
   - Macro Start/Stop hotkey (default F1)
-  - Both fully customizable in Keybinds page
   - Conflict detection prevents duplicate keys
-- 🎯 **Enhanced ROI Calibration**: 
-  - F2 hotkey for quick drag-select (customizable)
-  - Removed cursor calibration (simplified workflow)
-  - Dynamic button text shows current keybind
-- 🪟 **Always-On-Top Debug Window**: 
-  - Debug overlay now stays above game window
-  - Uses `cv2.WND_PROP_TOPMOST` flag
-  - Better visibility during gameplay
-- 📐 **Compact Window Design**: 
-  - Reduced from 1100x700 to 900x600
-  - Optimized for macro usage
-  - Auto-centered on screen at launch
-- 🎨 **Modern UI Refinements**:
-  - Clean table layout in Keybinds page
-  - Fixed grid alignment (200px, 120px, 150px columns)
-  - Visual separators between keybind rows
-  - Typography hierarchy (20px → 14px → 11px)
-  - Auto-clearing status messages (2s timeout)
-  - Icon-labeled settings cards (⚙️, ⏱️, 🔄)
-  - Version badge in topbar
+- 🎯 **Enhanced ROI Calibration**: F2 hotkey for quick drag-select
+- 🪟 **Always-On-Top Debug Window**: Debug overlay stays above game window
+- 📐 **Compact Window Design**: Reduced from 1100x700 to 900x600
 
-### Changed
+### Changed (v1.2.0-dev)
 - 🏗️ **Major Refactor**: HomePage, SettingsPage, KeybindsPage now use components
-- 📦 **Build Optimization**: Reduced to 57.5 MB (from 58.1 MB)
-  - Excluded unnecessary modules (matplotlib, scipy, pandas, test frameworks)
-  - Bytecode optimization level 2
-  - Disabled UPX compression (avoids false positives)
-- 🎛️ **UI Layout**: Split HomePage into left/right panels for better organization
-- ⚙️ **Settings Page**: Uses SettingSlider components, cleaner code
-- 🔑 **Keybinds Page**: Complete redesign with table layout and clickable buttons
-
-### Fixed
-- 🐛 **Progress Bar Updates**: Fixed `set()` → `set_value()` method calls
-- 🖼️ **Preview Sizing**: Adjusted for compact window (180-360px width)
-- 📝 **Config Persistence**: Added `roi_key` to settings.json
-
-### Removed
-- ❌ **Cursor Calibration**: Removed `calibrate_from_cursor()` feature
-- ❌ **PyAutoGUI Import**: No longer needed for cursor-based calibration
+- 📦 **Build Optimization**: Reduced to ~57 MB
+- 🎛️ **UI Layout**: Modern table layout in Keybinds page with fixed grid alignment
 
 ---
 
