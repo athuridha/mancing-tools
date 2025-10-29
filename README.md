@@ -20,11 +20,11 @@ made with ❤️ by lamont
 Mancing Tools was developed with a primary focus on achieving accuracy during fishing minigames. It has since expanded to include several powerful features:
 
 * **Advanced Color Detection**: HSV-based green bar detection with customizable thresholds for precise timing.
-* **Modern Component-Based UI**: Professional interface with reusable components, compact 900x600 layout optimized for macro usage.
-* **Dual Keybind System**: Separate customizable hotkeys for macro start/stop and ROI calibration with press-to-bind setup.
+* **Modern GUI with Components**: Professional interface with clean layout optimized for macro usage.
+* **Customizable Keybinds**: Dual hotkey system (macro control + ROI calibration) with press-to-bind setup.
 * **Auto-Pause System**: Smart pause when typing or Alt+Tab detected, automatically resumes after configurable delay.
-* **ROI Calibration Tools**: Drag-select with F2 hotkey (customizable), app auto-minimizes for clear screen view.
-* **Always-On-Top Debug Window**: OpenCV-powered visual overlay showing detection zones and color ratios, stays above game window.
+* **ROI Calibration Tools**: Quick drag-select with hotkey support, app auto-minimizes for clear screen view.
+* **Enhanced Debug Window**: OpenCV-powered visual overlay with always-on-top display for better visibility.
 * **Auto-Update System**: Automatically checks for updates and provides one-click installation from GitHub releases.
 * **Preset System**: Save and load configurations with JSON-based settings management.
 * **Auto Recast**: Intelligent automatic rod casting after minigame completion with configurable delays.
